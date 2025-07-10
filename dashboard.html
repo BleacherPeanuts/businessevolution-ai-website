@@ -80,6 +80,14 @@
                             </svg>
                             Refresh
                         </button>
+                        <button class="btn btn-primary" id="addSubscriberBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                            Add Subscriber
+                        </button>
                         <button class="btn btn-primary" id="exportBtn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -302,6 +310,49 @@ Welcome to Business Evolution AI! We're excited to have you join our community..
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="closePreviewBtn2">Close</button>
                 <button class="btn btn-primary" id="sendFromPreviewBtn">Send Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Subscriber Modal -->
+    <div id="addSubscriberModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Subscriber Manually</h3>
+                <button class="modal-close" id="closeAddSubscriberBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addSubscriberForm" class="add-subscriber-form">
+                    <div class="form-group">
+                        <label for="manualFirstName">First Name *</label>
+                        <input type="text" id="manualFirstName" class="form-control" 
+                               placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="manualEmail">Email Address *</label>
+                        <input type="email" id="manualEmail" class="form-control" 
+                               placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="manualSource">Source</label>
+                        <select id="manualSource" class="form-control">
+                            <option value="Manual Entry">Manual Entry</option>
+                            <option value="Business Evolution AI">Business Evolution AI (Website)</option>
+                            <option value="Import">Import</option>
+                            <option value="Event">Event</option>
+                            <option value="Referral">Referral</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div id="addSubscriberMessage" class="form-message" style="display: none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAddSubscriberBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveSubscriberBtn">
+                    <span id="saveSubscriberBtnText">Add Subscriber</span>
+                    <div class="loading-spinner" style="display: none;"></div>
+                </button>
             </div>
         </div>
     </div>

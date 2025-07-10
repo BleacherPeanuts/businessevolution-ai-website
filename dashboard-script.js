@@ -134,14 +134,12 @@ function initializeTabs() {
 function initializeEventListeners() {
     // Subscribers tab
     document.getElementById('refreshBtn').addEventListener('click', loadSubscribers);
+    document.getElementById('addSubscriberBtn').addEventListener('click', openAddSubscriberModal);
     document.getElementById('exportBtn').addEventListener('click', exportToCSV);
     document.getElementById('searchInput').addEventListener('input', filterSubscribers);
     document.getElementById('filterSelect').addEventListener('change', filterSubscribers);
     document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
     document.getElementById('bulkDeleteBtn').addEventListener('click', handleBulkDelete); // ADDED: Delete button handler
-    
-    // Add sorting event listeners to table headers
-    initializeSortableHeaders();
     
     // Compose tab
     document.getElementById('emailComposeForm').addEventListener('submit', handleEmailSubmit);
@@ -163,6 +161,12 @@ function initializeEventListeners() {
     document.getElementById('closePreviewBtn').addEventListener('click', closePreviewModal);
     document.getElementById('closePreviewBtn2').addEventListener('click', closePreviewModal);
     document.getElementById('sendFromPreviewBtn').addEventListener('click', sendEmailFromPreview);
+    
+    // Add Subscriber Modal
+    document.getElementById('closeAddSubscriberBtn').addEventListener('click', closeAddSubscriberModal);
+    document.getElementById('cancelAddSubscriberBtn').addEventListener('click', closeAddSubscriberModal);
+    document.getElementById('addSubscriberForm').addEventListener('submit', handleAddSubscriber);
+    document.getElementById('saveSubscriberBtn').addEventListener('click', handleAddSubscriber);
 }
 
 // Initialize sortable table headers
@@ -173,28 +177,38 @@ function initializeSortableHeaders() {
         // Skip checkbox column and actions column
         if (index === 0 || index === 5) return;
         
+        // Check if already initialized to prevent duplicates
+        if (header.classList.contains('sortable-initialized')) return;
+        
         header.style.cursor = 'pointer';
         header.classList.add('sortable');
+        header.classList.add('sortable-initialized');
         
-        // Add sort indicators
-        const sortIndicator = document.createElement('span');
-        sortIndicator.className = 'sort-indicator';
-        sortIndicator.innerHTML = '⬍'; // neutral sort icon
-        header.appendChild(sortIndicator);
+        // Add sort indicators only if not already present
+        if (!header.querySelector('.sort-indicator')) {
+            const sortIndicator = document.createElement('span');
+            sortIndicator.className = 'sort-indicator';
+            sortIndicator.innerHTML = '⬍'; // neutral sort icon
+            header.appendChild(sortIndicator);
+        }
         
-        header.addEventListener('click', () => {
-            const columnMap = {
-                1: 'firstName',
-                2: 'email', 
-                3: 'timestamp',
-                4: 'source'
-            };
-            
-            const column = columnMap[index];
-            if (column) {
-                handleSort(column);
-            }
-        });
+        // Add click listener only if not already added
+        if (!header.hasAttribute('data-sort-listener')) {
+            header.setAttribute('data-sort-listener', 'true');
+            header.addEventListener('click', () => {
+                const columnMap = {
+                    1: 'firstName',
+                    2: 'email', 
+                    3: 'timestamp',
+                    4: 'source'
+                };
+                
+                const column = columnMap[index];
+                if (column) {
+                    handleSort(column);
+                }
+            });
+        }
     });
 }
 
@@ -320,9 +334,6 @@ async function loadSubscribers() {
     state.filteredSubscribers = [...state.subscribers];
     renderSubscribersTable();
     updateDashboardStats();
-    
-    // Initialize sorting after table is rendered
-    initializeSortableHeaders();
 }
 
 // Show test data for demonstration
@@ -368,9 +379,6 @@ function showTestData() {
     state.filteredSubscribers = [...state.subscribers];
     renderSubscribersTable();
     updateDashboardStats();
-    
-    // Initialize sorting after table is rendered
-    initializeSortableHeaders();
 }
 
 // Render subscribers table
@@ -399,6 +407,9 @@ function renderSubscribersTable() {
     document.querySelectorAll('.subscriber-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', handleSubscriberSelection);
     });
+    
+    // Initialize sorting if not already done
+    initializeSortableHeaders();
     
     updateBulkActions();
 }
@@ -935,4 +946,175 @@ async function handleBulkDelete() {
 // Consider adding to your form validation:
 function sanitizeInput(input) {
     return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+}
+
+// ==========================================
+// MANUAL SUBSCRIBER ADDITION FUNCTIONALITY
+// ==========================================
+
+// Open the add subscriber modal
+function openAddSubscriberModal() {
+    const modal = document.getElementById('addSubscriberModal');
+    const form = document.getElementById('addSubscriberForm');
+    
+    // Reset form
+    form.reset();
+    
+    // Hide any previous messages
+    hideAddSubscriberMessage();
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Focus on first input
+    document.getElementById('manualFirstName').focus();
+}
+
+// Close the add subscriber modal
+function closeAddSubscriberModal() {
+    const modal = document.getElementById('addSubscriberModal');
+    modal.style.display = 'none';
+}
+
+// Handle add subscriber form submission
+async function handleAddSubscriber(e) {
+    e.preventDefault();
+    
+    const firstName = document.getElementById('manualFirstName').value.trim();
+    const email = document.getElementById('manualEmail').value.trim();
+    const source = document.getElementById('manualSource').value;
+    
+    // Validate inputs
+    if (!firstName) {
+        showAddSubscriberMessage('Please enter a first name.', 'error');
+        return;
+    }
+    
+    if (!email) {
+        showAddSubscriberMessage('Please enter an email address.', 'error');
+        return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showAddSubscriberMessage('Please enter a valid email address.', 'error');
+        return;
+    }
+    
+    // Check if email already exists (client-side check)
+    const existingSubscriber = state.subscribers.find(sub => 
+        sub.email.toLowerCase() === email.toLowerCase()
+    );
+    
+    if (existingSubscriber) {
+        showAddSubscriberMessage('This email address is already subscribed.', 'error');
+        return;
+    }
+    
+    // Show loading state
+    setAddSubscriberLoadingState(true);
+    
+    try {
+        // Submit to Google Sheets via the enhanced script
+        const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('email', email);
+        formData.append('timestamp', new Date().toISOString());
+        formData.append('source', source);
+        formData.append('ipAddress', 'Dashboard - Manual Entry');
+        
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Success - add to local state immediately for instant feedback
+            const newSubscriber = {
+                firstName: firstName,
+                email: email,
+                timestamp: new Date(),
+                source: source,
+                selected: false
+            };
+            
+            state.subscribers.unshift(newSubscriber); // Add to beginning of array
+            state.filteredSubscribers = [...state.subscribers];
+            
+            // Re-render table
+            renderSubscribersTable();
+            updateDashboardStats();
+            
+            // Show success message
+            showAddSubscriberMessage('Subscriber added successfully!', 'success');
+            showNotification(`${firstName} has been added to your subscriber list!`, 'success');
+            
+            // Close modal after a short delay
+            setTimeout(() => {
+                closeAddSubscriberModal();
+            }, 1500);
+            
+        } else {
+            throw new Error(data.message || 'Failed to add subscriber');
+        }
+        
+    } catch (error) {
+        console.error('Error adding subscriber:', error);
+        
+        let errorMessage = 'Failed to add subscriber. Please try again.';
+        if (error.message.includes('already subscribed')) {
+            errorMessage = 'This email address is already subscribed.';
+        }
+        
+        showAddSubscriberMessage(errorMessage, 'error');
+    } finally {
+        setAddSubscriberLoadingState(false);
+    }
+}
+
+// Show message in add subscriber modal
+function showAddSubscriberMessage(message, type) {
+    const messageElement = document.getElementById('addSubscriberMessage');
+    messageElement.textContent = message;
+    messageElement.className = `form-message ${type}`;
+    messageElement.style.display = 'block';
+}
+
+// Hide message in add subscriber modal
+function hideAddSubscriberMessage() {
+    const messageElement = document.getElementById('addSubscriberMessage');
+    messageElement.style.display = 'none';
+}
+
+// Set loading state for add subscriber form
+function setAddSubscriberLoadingState(isLoading) {
+    const saveBtn = document.getElementById('saveSubscriberBtn');
+    const saveBtnText = document.getElementById('saveSubscriberBtnText');
+    const spinner = saveBtn.querySelector('.loading-spinner');
+    const form = document.getElementById('addSubscriberForm');
+    
+    if (isLoading) {
+        saveBtn.disabled = true;
+        saveBtnText.textContent = 'Adding...';
+        spinner.style.display = 'inline-block';
+        
+        // Disable form inputs
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => input.disabled = true);
+    } else {
+        saveBtn.disabled = false;
+        saveBtnText.textContent = 'Add Subscriber';
+        spinner.style.display = 'none';
+        
+        // Re-enable form inputs
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => input.disabled = false);
+    }
 } 
