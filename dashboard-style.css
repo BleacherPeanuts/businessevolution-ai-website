@@ -67,16 +67,18 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 16px;
     line-height: 1.6;
-    color: var(--gray-900);
-    background-color: var(--light-bg);
+    color: var(--white);
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    min-height: 100vh;
 }
 
 /* Header */
 .dashboard-header {
-    background: var(--white);
-    border-bottom: 1px solid var(--gray-200);
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1.5rem 2rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .header-content {
@@ -101,7 +103,7 @@ body {
 .dashboard-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--gray-900);
+    color: var(--white);
 }
 
 .header-stats {
@@ -112,8 +114,9 @@ body {
 .stat-card {
     text-align: center;
     padding: 0.5rem 1.5rem;
-    background: var(--gray-100);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .stat-number {
@@ -125,7 +128,7 @@ body {
 
 .stat-label {
     font-size: 0.875rem;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Main Dashboard */
@@ -140,13 +143,15 @@ body {
     display: flex !important;
     gap: 1rem;
     margin-bottom: 2rem;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.1);
     padding: 1rem;
     border-radius: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     visibility: visible !important;
     position: relative;
     z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
 }
 
 .nav-tab {
@@ -159,14 +164,14 @@ body {
     border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--gray-700);
+    color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .nav-tab:hover {
-    background: var(--gray-100);
-    color: var(--gray-900);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
 }
 
 .nav-tab.active {
@@ -182,10 +187,12 @@ body {
 
 /* Tab Content */
 .tab-content {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     padding: 2rem;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .tab-panel {
@@ -206,7 +213,7 @@ body {
 .panel-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--gray-900);
+    color: var(--white);
 }
 
 .panel-actions {
@@ -244,13 +251,15 @@ body {
 }
 
 .btn-secondary {
-    background: var(--gray-200);
-    color: var(--gray-700);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover {
-    background: var(--gray-300);
-    color: var(--gray-900);
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    transform: translateY(-1px);
 }
 
 .btn-danger {
@@ -272,34 +281,43 @@ body {
 .search-input {
     flex: 1;
     padding: 0.625rem 1rem;
-    border: 1px solid var(--gray-300);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     font-size: 0.875rem;
     transition: var(--transition);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
 }
 
 .search-input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(82, 195, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(82, 195, 241, 0.3);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .filter-select {
     padding: 0.625rem 1rem;
-    border: 1px solid var(--gray-300);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     font-size: 0.875rem;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
     cursor: pointer;
 }
 
 /* Table Styles */
 .table-container {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .subscribers-table {
@@ -309,12 +327,12 @@ body {
 }
 
 .subscribers-table th {
-    background: var(--gray-50);
+    background: rgba(255, 255, 255, 0.1);
     padding: 1rem;
     text-align: left;
     font-weight: 600;
-    color: var(--gray-700);
-    border-bottom: 2px solid var(--gray-200);
+    color: var(--white);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
     position: relative;
     user-select: none; /* Prevent text selection on headers */
 }
@@ -327,8 +345,8 @@ body {
 }
 
 .subscribers-table th.sortable:hover {
-    background: var(--gray-100);
-    color: var(--primary);
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--primary-color);
 }
 
 .subscribers-table th.sorted {
@@ -361,12 +379,13 @@ body {
 
 .subscribers-table td {
     padding: 1rem;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     vertical-align: middle;
+    color: var(--white);
 }
 
 .subscribers-table tbody tr:hover {
-    background: var(--gray-50);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .checkbox-col {
@@ -412,27 +431,33 @@ body {
     display: block;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: var(--gray-700);
+    color: var(--white);
 }
 
 .form-control {
     width: 100%;
     padding: 0.625rem 1rem;
-    border: 1px solid var(--gray-300);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     font-size: 0.875rem;
     transition: var(--transition);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(82, 195, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(82, 195, 241, 0.3);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .form-help {
     font-size: 0.75rem;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.7);
     margin-top: 0.25rem;
 }
 
@@ -750,14 +775,9 @@ body {
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --light-bg: #1a1a1a;
-        --white: #1f1f1f;
-        --gray-100: #2a2a2a;
-        --gray-200: #333;
-        --gray-700: #ccc;
-        --gray-900: #f1f1f1;
-    }
+/* Dark Theme Overrides */
+:root {
+    /* Update specific variables for better dark theme contrast */
+    --light-bg: #1a1a1a;
+    --dark-bg: #1e1e1e;
 } 
