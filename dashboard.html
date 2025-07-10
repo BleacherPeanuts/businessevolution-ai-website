@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Hub - Business Evolution AI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="dashboard-style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="Business Evolution AI" class="header-logo">
+                <h1 class="dashboard-title">Email Management Hub</h1>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalSubscribers">0</span>
+                    <span class="stat-label">Total Subscribers</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="todaySignups">0</span>
+                    <span class="stat-label">Today's Signups</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Navigation Tabs -->
+        <nav class="dashboard-nav">
+            <button class="nav-tab active" data-tab="subscribers">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Subscribers
+            </button>
+            <button class="nav-tab" data-tab="compose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Compose Email
+            </button>
+            <button class="nav-tab" data-tab="settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24m-4.24 14.66l4.24 4.24M6.34 6.34L2.1 2.1m4.24 19.8l-4.24-4.24"></path>
+                </svg>
+                Settings
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Subscribers Tab -->
+            <div id="subscribers-tab" class="tab-panel active">
+                <div class="panel-header">
+                    <h2>Email Subscribers</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                        <button class="btn btn-primary" id="exportBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by name or email...">
+                    <select id="filterSelect" class="filter-select">
+                        <option value="all">All Subscribers</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+
+                <!-- Subscribers Table -->
+                <div class="table-container">
+                    <table class="subscribers-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Signup Date</th>
+                                <th>Source</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscribersTableBody">
+                            <!-- Subscribers will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="bulk-actions" id="bulkActions" style="display: none;">
+                    <span class="selected-count">
+                        <span id="selectedCount">0</span> selected
+                    </span>
+                    <button class="btn btn-secondary" id="bulkEmailBtn">Send Email</button>
+                    <button class="btn btn-danger" id="bulkDeleteBtn">Delete</button>
+                </div>
+            </div>
+
+            <!-- Compose Email Tab -->
+            <div id="compose-tab" class="tab-panel">
+                <div class="panel-header">
+                    <h2>Compose Email</h2>
+                </div>
+
+                <form id="emailComposeForm" class="email-compose-form">
+                    <!-- Recipients -->
+                    <div class="form-group">
+                        <label for="recipients">Recipients</label>
+                        <select id="recipients" class="form-control" multiple>
+                            <option value="all" selected>All Subscribers</option>
+                            <option value="selected">Selected Subscribers</option>
+                            <option value="custom">Custom List</option>
+                        </select>
+                        <div class="form-help">Hold Ctrl/Cmd to select multiple options</div>
+                    </div>
+
+                    <!-- Custom Recipients -->
+                    <div class="form-group" id="customRecipientsGroup" style="display: none;">
+                        <label for="customRecipients">Custom Recipients</label>
+                        <textarea id="customRecipients" class="form-control" rows="3" 
+                                  placeholder="Enter email addresses separated by commas"></textarea>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="form-group">
+                        <label for="emailSubject">Subject Line</label>
+                        <input type="text" id="emailSubject" class="form-control" 
+                               placeholder="Your subject line here..." required>
+                    </div>
+
+                    <!-- Email Template -->
+                    <div class="form-group">
+                        <label for="emailTemplate">Email Template</label>
+                        <select id="emailTemplate" class="form-control">
+                            <option value="custom">Custom Message</option>
+                            <option value="welcome">Welcome Email</option>
+                            <option value="newsletter">Newsletter Update</option>
+                            <option value="announcement">Important Announcement</option>
+                        </select>
+                    </div>
+
+                    <!-- Email Content -->
+                    <div class="form-group">
+                        <label for="emailContent">Email Content</label>
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" data-action="bold" title="Bold">B</button>
+                            <button type="button" class="editor-btn" data-action="italic" title="Italic">I</button>
+                            <button type="button" class="editor-btn" data-action="link" title="Add Link">🔗</button>
+                            <button type="button" class="editor-btn" data-action="preview" title="Preview">👁️</button>
+                        </div>
+                        <textarea id="emailContent" class="form-control email-editor" rows="15" 
+                                  placeholder="Write your email content here...
+
+Use {{firstName}} to personalize with subscriber's name.
+
+Example:
+Hi {{firstName}},
+
+Welcome to Business Evolution AI! We're excited to have you join our community..." required></textarea>
+                    </div>
+
+                    <!-- Send Options -->
+                    <div class="form-group">
+                        <label>Send Options</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="testMode" checked>
+                                <span>Test Mode (send only to yourself first)</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="trackOpens">
+                                <span>Track email opens</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="saveDraftBtn">Save as Draft</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span id="sendBtnText">Send Test Email</span>
+                            <div class="loading-spinner" style="display: none;"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-panel">
+                <div class="panel-header">
+                    <h2>Email Settings</h2>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Google Sheets Connection</h3>
+                    <div class="form-group">
+                        <label for="sheetsId">Google Sheets ID</label>
+                        <input type="text" id="sheetsId" class="form-control" 
+                               placeholder="Enter your Google Sheets ID">
+                        <div class="form-help">
+                            Find this in your Google Sheets URL: https://docs.google.com/spreadsheets/d/[SHEETS_ID]/edit
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="testConnectionBtn">Test Connection</button>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Email Configuration</h3>
+                    <div class="form-group">
+                        <label for="fromName">From Name</label>
+                        <input type="text" id="fromName" class="form-control" 
+                               value="Business Evolution AI" placeholder="Your name or business name">
+                    </div>
+                    <div class="form-group">
+                        <label for="fromEmail">From Email</label>
+                        <input type="email" id="fromEmail" class="form-control" 
+                               value="businessevolutionai@gmail.com" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="replyTo">Reply-To Email</label>
+                        <input type="email" id="replyTo" class="form-control" 
+                               placeholder="Leave blank to use From Email">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>API Configuration</h3>
+                    <div class="form-group">
+                        <label for="apiService">Email Service</label>
+                        <select id="apiService" class="form-control">
+                            <option value="gmail">Gmail API (Recommended)</option>
+                            <option value="sendgrid">SendGrid</option>
+                            <option value="mailgun">Mailgun</option>
+                            <option value="smtp">Custom SMTP</option>
+                        </select>
+                    </div>
+                    <div id="apiKeyGroup" class="form-group">
+                        <label for="apiKey">API Key</label>
+                        <input type="password" id="apiKey" class="form-control" 
+                               placeholder="Your API key">
+                    </div>
+                    <button class="btn btn-secondary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Email Preview Modal -->
+    <div id="emailPreviewModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Email Preview</h3>
+                <button class="modal-close" id="closePreviewBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-meta">
+                    <p><strong>From:</strong> <span id="previewFrom"></span></p>
+                    <p><strong>To:</strong> <span id="previewTo"></span></p>
+                    <p><strong>Subject:</strong> <span id="previewSubject"></span></p>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Email preview content -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closePreviewBtn2">Close</button>
+                <button class="btn btn-primary" id="sendFromPreviewBtn">Send Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="dashboard-script.js"></script>
+</body>
+</html> 
