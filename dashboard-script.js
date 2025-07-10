@@ -33,6 +33,8 @@ const state = {
     filteredSubscribers: [],
     selectedRows: new Set(), // Changed from selectedEmails to selectedRows (using indices)
     currentTab: 'subscribers',
+    sortColumn: null,
+    sortDirection: 'asc', // 'asc' or 'desc'
     emailTemplates: {
         welcome: `Hi {{firstName}},
 
@@ -138,6 +140,9 @@ function initializeEventListeners() {
     document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
     document.getElementById('bulkDeleteBtn').addEventListener('click', handleBulkDelete); // ADDED: Delete button handler
     
+    // Add sorting event listeners to table headers
+    initializeSortableHeaders();
+    
     // Compose tab
     document.getElementById('emailComposeForm').addEventListener('submit', handleEmailSubmit);
     document.getElementById('recipients').addEventListener('change', handleRecipientChange);
@@ -160,18 +165,124 @@ function initializeEventListeners() {
     document.getElementById('sendFromPreviewBtn').addEventListener('click', sendEmailFromPreview);
 }
 
+// Initialize sortable table headers
+function initializeSortableHeaders() {
+    const headers = document.querySelectorAll('.subscribers-table th');
+    
+    headers.forEach((header, index) => {
+        // Skip checkbox column and actions column
+        if (index === 0 || index === 5) return;
+        
+        header.style.cursor = 'pointer';
+        header.classList.add('sortable');
+        
+        // Add sort indicators
+        const sortIndicator = document.createElement('span');
+        sortIndicator.className = 'sort-indicator';
+        sortIndicator.innerHTML = '⬍'; // neutral sort icon
+        header.appendChild(sortIndicator);
+        
+        header.addEventListener('click', () => {
+            const columnMap = {
+                1: 'firstName',
+                2: 'email', 
+                3: 'timestamp',
+                4: 'source'
+            };
+            
+            const column = columnMap[index];
+            if (column) {
+                handleSort(column);
+            }
+        });
+    });
+}
+
+// Handle column sorting
+function handleSort(column) {
+    // If clicking the same column, toggle direction
+    if (state.sortColumn === column) {
+        state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        // New column, default to ascending
+        state.sortColumn = column;
+        state.sortDirection = 'asc';
+    }
+    
+    // Sort the filtered subscribers
+    state.filteredSubscribers.sort((a, b) => {
+        let valueA = a[column];
+        let valueB = b[column];
+        
+        // Handle different data types
+        if (column === 'timestamp') {
+            valueA = new Date(valueA);
+            valueB = new Date(valueB);
+        } else if (typeof valueA === 'string') {
+            valueA = valueA.toLowerCase();
+            valueB = valueB.toLowerCase();
+        }
+        
+        let comparison = 0;
+        if (valueA > valueB) {
+            comparison = 1;
+        } else if (valueA < valueB) {
+            comparison = -1;
+        }
+        
+        return state.sortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    // Update sort indicators
+    updateSortIndicators();
+    
+    // Re-render table
+    renderSubscribersTable();
+}
+
+// Update sort indicator icons
+function updateSortIndicators() {
+    const headers = document.querySelectorAll('.subscribers-table th');
+    
+    headers.forEach((header, index) => {
+        const indicator = header.querySelector('.sort-indicator');
+        if (!indicator) return;
+        
+        const columnMap = {
+            1: 'firstName',
+            2: 'email', 
+            3: 'timestamp',
+            4: 'source'
+        };
+        
+        const column = columnMap[index];
+        
+        if (column === state.sortColumn) {
+            // Active column
+            header.classList.add('sorted');
+            indicator.innerHTML = state.sortDirection === 'asc' ? '▲' : '▼';
+            indicator.classList.add('active');
+        } else {
+            // Inactive column
+            header.classList.remove('sorted');
+            indicator.innerHTML = '⬍';
+            indicator.classList.remove('active');
+        }
+    });
+}
+
 // Load subscribers from Google Sheets or show test data
 async function loadSubscribers() {
     console.log('Loading subscribers...');
     
     try {
         // Try to fetch real data from Google Sheets
+        const formData = new FormData();
+        formData.append('action', 'getSubscribers');
+        
         const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=getSubscribers'
+            body: formData
         });
         
         if (!response.ok) {
@@ -209,6 +320,9 @@ async function loadSubscribers() {
     state.filteredSubscribers = [...state.subscribers];
     renderSubscribersTable();
     updateDashboardStats();
+    
+    // Initialize sorting after table is rendered
+    initializeSortableHeaders();
 }
 
 // Show test data for demonstration
@@ -254,6 +368,9 @@ function showTestData() {
     state.filteredSubscribers = [...state.subscribers];
     renderSubscribersTable();
     updateDashboardStats();
+    
+    // Initialize sorting after table is rendered
+    initializeSortableHeaders();
 }
 
 // Render subscribers table
@@ -772,15 +889,17 @@ async function handleBulkDelete() {
         const subscribersToDelete = Array.from(state.selectedRows).map(index => state.filteredSubscribers[index]);
         
         // Send delete requests to Google Apps Script
-        const deletePromises = subscribersToDelete.map(subscriber => 
-            fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+        const deletePromises = subscribersToDelete.map(subscriber => {
+            const formData = new FormData();
+            formData.append('action', 'deleteSubscriber');
+            formData.append('email', subscriber.email);
+            formData.append('timestamp', subscriber.timestamp.toISOString());
+            
+            return fetch(CONFIG.GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=deleteSubscriber&email=${encodeURIComponent(subscriber.email)}&timestamp=${encodeURIComponent(subscriber.timestamp.toISOString())}`
-            })
-        );
+                body: formData
+            });
+        });
         
         showNotification('Deleting subscribers...', 'info');
         
