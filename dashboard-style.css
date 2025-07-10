@@ -7,6 +7,8 @@
 :root {
     /* Colors */
     --primary: #52C3F1;
+    --primary-color: #52C3F1;
+    --secondary-color: #2AA3D1;
     --primary-light: #e8f4f8;
     --secondary: #6c757d;
     --success: #28a745;
@@ -135,13 +137,16 @@ body {
 
 /* Navigation Tabs */
 .dashboard-nav {
-    display: flex;
+    display: flex !important;
     gap: 1rem;
     margin-bottom: 2rem;
     background: var(--white);
     padding: 1rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
+    visibility: visible !important;
+    position: relative;
+    z-index: 10;
 }
 
 .nav-tab {
@@ -205,8 +210,11 @@ body {
 }
 
 .panel-actions {
-    display: flex;
+    display: flex !important;
     gap: 1rem;
+    visibility: visible !important;
+    position: relative;
+    z-index: 10;
 }
 
 /* Buttons */

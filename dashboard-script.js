@@ -79,11 +79,23 @@ The Business Evolution AI Team`
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard script loaded, initializing app...');
     initializeApp();
 });
 
 // Main initialization
 function initializeApp() {
+    console.log('Initializing app...');
+    
+    // Check if key elements exist
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const addBtn = document.getElementById('addSubscriberBtn');
+    const panelActions = document.querySelector('.panel-actions');
+    
+    console.log('Found nav tabs:', navTabs.length);
+    console.log('Found add subscriber button:', !!addBtn);
+    console.log('Found panel actions:', !!panelActions);
+    
     loadSettings();
     initializeTabs();
     initializeEventListeners();
