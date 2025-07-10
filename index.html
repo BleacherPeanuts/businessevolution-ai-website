@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Evolution AI - Demystifying AI for Business Owners</title>
+    <meta name="description" content="Join Phil Metzger's newsletter for practical AI guidance tailored to small and medium businesses. No jargon, just actionable insights.">
+    <meta name="keywords" content="AI for business, artificial intelligence education, small business AI, Fort Collins AI consultant">
+    <meta name="author" content="Phil Metzger">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Business Evolution AI - Demystifying AI for Business Owners">
+    <meta property="og:description" content="Join Phil Metzger's newsletter for practical AI guidance tailored to small and medium businesses. No jargon, just actionable insights.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://businessevolution.ai">
+    <meta property="og:image" content="https://businessevolution.ai/images/logo.png">
+    
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Business Evolution AI - Demystifying AI for Business Owners">
+    <meta name="twitter:description" content="Join Phil Metzger's newsletter for practical AI guidance tailored to small and medium businesses. No jargon, just actionable insights.">
+    <meta name="twitter:image" content="https://businessevolution.ai/images/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/Favicon.ico?v=1">
+    <link rel="icon" type="image/png" href="images/logo.png?v=1">
+    <link rel="apple-touch-icon" href="images/logo.png?v=1">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Business Evolution AI",
+      "description": "AI consulting and education for small and medium businesses",
+      "url": "https://businessevolution.ai",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Fort Collins",
+        "addressRegion": "Colorado",
+        "addressCountry": "US"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Phil Metzger"
+      },
+      "sameAs": [
+        "https://businessevolution.ai"
+      ]
+    }
+    </script>
+    
+    <!-- Google Analytics (Optional - Replace with your tracking ID) -->
+    <!-- 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_TRACKING_ID');
+    </script>
+    -->
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <img src="images/logo.png" alt="Business Evolution AI Logo" class="logo">
+                </div>
+                
+                <!-- Tagline -->
+                <h1 class="tagline">
+                    The question isn't whether AI will transform business. It's whether you'll 
+                    <span class="highlight">lead</span>, <span class="highlight">follow</span>, or get 
+                    <span class="highlight">swallowed</span> by the transformation. 
+                    <br><br>
+                    <span class="tagline-italic">Join us as we <span class="highlight">dive in</span>, and <span class="highlight">thrive in</span>, <span class="underline">the age of AI!</span></span>
+                </h1>
+                
+                <!-- Description -->
+                <p class="description">
+                    Join our newsletter for insights on AI innovations transforming modern business. 
+                    Get practical strategies, case studies, and emerging trends delivered to your inbox—all 
+                    explained in plain English for busy business owners and professionals.
+                </p>
+                
+                <!-- Email Signup Form -->
+                <div class="email-signup">
+                    <form id="emailForm" class="email-form">
+                        <div class="form-row">
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName" 
+                                placeholder="First name" 
+                                required 
+                                aria-label="First name"
+                                class="form-input"
+                            >
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="Email address" 
+                                required 
+                                aria-label="Email address"
+                                class="form-input"
+                            >
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Start Your AI Evolution</span>
+                            <div class="loading-spinner"></div>
+                        </button>
+                        <div id="form-message" class="form-message"></div>
+                    </form>
+                    
+                    <!-- GDPR Notice -->
+                    <p class="gdpr-notice">
+                        By subscribing, you agree to receive AI insights. We respect your privacy and will never share your information. 
+                        Unsubscribe anytime.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- What You'll Get Section -->
+        <section class="benefits">
+            <div class="container">
+                <h2 class="benefits-title">What You'll Get</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <div class="icon-bars">
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                            </div>
+                        </div>
+                        <h3>AI Tool Breakdowns</h3>
+                        <p>Clear explanations of AI tools in plain English—no technical jargon, just practical insights you can use.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <div class="icon-bars">
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                            </div>
+                        </div>
+                        <h3>Real-World Case Studies</h3>
+                        <p>Stories from actual businesses implementing AI solutions—see what works and what doesn't.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <div class="icon-bars">
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                            </div>
+                        </div>
+                        <h3>Step-by-Step Implementation</h3>
+                        <p>Actionable guides to help you implement AI in your business without the overwhelm.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <div class="icon-bars">
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                                <div class="mini-bar"></div>
+                            </div>
+                        </div>
+                        <h3>Honest Assessments</h3>
+                        <p>Cut through the hype with realistic evaluations of AI tools and their actual business impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Business Evolution AI. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Background Pattern -->
+    <div class="background-pattern">
+        <div class="pattern-bars">
+            <div class="pattern-bar"></div>
+            <div class="pattern-bar"></div>
+            <div class="pattern-bar"></div>
+            <div class="pattern-bar"></div>
+            <div class="pattern-bar"></div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html> 
