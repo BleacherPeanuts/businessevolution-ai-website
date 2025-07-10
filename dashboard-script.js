@@ -795,24 +795,35 @@ function showNotification(message, type = 'info') {
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: var(--white);
+                background: rgba(0, 0, 0, 0.9);
+                color: var(--white);
                 border-radius: 8px;
                 padding: 1rem 1.5rem;
-                box-shadow: var(--shadow-lg);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
                 z-index: 2000;
                 animation: slideIn 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
             }
             
             .notification-success {
-                border-left: 4px solid var(--success);
+                border-left: 4px solid #28a745;
+                background: rgba(40, 167, 69, 0.15);
             }
             
             .notification-error {
-                border-left: 4px solid var(--danger);
+                border-left: 4px solid #dc3545;
+                background: rgba(220, 53, 69, 0.15);
             }
             
             .notification-info {
-                border-left: 4px solid var(--info);
+                border-left: 4px solid #52C3F1;
+                background: rgba(82, 195, 241, 0.15);
+            }
+            
+            .notification-warning {
+                border-left: 4px solid #ffc107;
+                background: rgba(255, 193, 7, 0.15);
             }
             
             .notification-content {
@@ -826,7 +837,12 @@ function showNotification(message, type = 'info') {
                 border: none;
                 font-size: 1.25rem;
                 cursor: pointer;
-                color: var(--gray-600);
+                color: rgba(255, 255, 255, 0.8);
+                transition: color 0.2s ease;
+            }
+            
+            .notification-close:hover {
+                color: var(--white);
             }
             
             @keyframes slideIn {
